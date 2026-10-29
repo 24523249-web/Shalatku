@@ -18,16 +18,19 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun TasbihScreen(
     count: Int,
+    rounds: Int,
     onIncrement: () -> Unit,
     onReset: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier.fillMaxSize().padding(16.dp),
+        modifier = modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text("Tasbih", style = MaterialTheme.typography.headlineMedium)
+        Spacer(Modifier.height(8.dp))
+        Text("Putaran selesai: $rounds", style = MaterialTheme.typography.titleMedium)
         Spacer(Modifier.height(16.dp))
         Text("$count", style = MaterialTheme.typography.displayLarge)
         Spacer(Modifier.height(24.dp))
