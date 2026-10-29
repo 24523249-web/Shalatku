@@ -2,11 +2,13 @@ package com.example.shalatku
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
@@ -20,8 +22,10 @@ import androidx.compose.ui.unit.dp
 fun TasbihScreen(
     count: Int,
     rounds: Int,
+    roundSize: Int = 33,
     onIncrement: () -> Unit,
     onReset: () -> Unit,
+    onSelectRoundSize: (Int) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -31,9 +35,21 @@ fun TasbihScreen(
     ) {
         Text("Tasbih", style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(8.dp))
-        Text("Putaran selesai: $rounds", style = MaterialTheme.typography.titleMedium)
+
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            listOf(33, 99, 100).forEach { size ->
+                FilterChip(
+                    selected = roundSize == size,
+                    onClick = { onSelectRoundSize(size) },
+                    label = { Text("$size") }
+                )
+            }
+        }
+
         Spacer(Modifier.height(16.dp))
-        Text("$count", style = MaterialTheme.typography.displayLarge)
+        Text("Putaran selesai: $rounds", style = MaterialTheme.typography.titleMedium)
+        Spacer(Modifier.height(8.dp))
+        Text("$count / $roundSize", style = MaterialTheme.typography.displayLarge)
         Spacer(Modifier.height(24.dp))
         Button(onClick = onIncrement) { Text("+1") }
         Spacer(Modifier.height(8.dp))
@@ -47,7 +63,9 @@ fun TasbihScreenPreview() {
     TasbihScreen(
         count = 12,
         rounds = 2,
+        roundSize = 33,
         onIncrement = {},
-        onReset = {}
+        onReset = {},
+        onSelectRoundSize = {}
     )
 }

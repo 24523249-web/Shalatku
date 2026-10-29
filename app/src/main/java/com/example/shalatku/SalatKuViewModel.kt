@@ -6,8 +6,6 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
-private const val ROUND_SIZE = 33
-
 class SalatKuViewModel : ViewModel() {
 
     // --- Tasbih ---
@@ -15,6 +13,10 @@ class SalatKuViewModel : ViewModel() {
         private set
 
     var completedRounds by mutableIntStateOf(0)
+        private set
+
+    // Part B HW12: Target tasbih dinamis (default 33)
+    var roundSize by mutableIntStateOf(33)
         private set
 
     // --- Tracker ---
@@ -25,9 +27,10 @@ class SalatKuViewModel : ViewModel() {
     var selectedDay by mutableIntStateOf(0)
         private set
 
+    // --- Actions: Tasbih ---
     fun incrementTasbih() {
         tasbihCount++
-        if (tasbihCount == ROUND_SIZE) {
+        if (tasbihCount == roundSize) {
             completedRounds++
             tasbihCount = 0
         }
@@ -38,11 +41,28 @@ class SalatKuViewModel : ViewModel() {
         completedRounds = 0
     }
 
+    fun updateRoundSize(size: Int) {
+        roundSize = size
+        tasbihCount = 0
+    }
+
+    // --- Actions: Tracker ---
     fun togglePrayer(name: String) {
         if (name in _donePrayers) _donePrayers.remove(name) else _donePrayers.add(name)
     }
 
+    // Part A HW12: Hapus semua checklist shalat
+    fun clearPrayers() {
+        _donePrayers.clear()
+    }
+
+    // --- Actions: Home ---
     fun selectDay(index: Int) {
         selectedDay = index
+    }
+
+    // Bagian 6 (Level Medium): Kembali ke hari ini
+    fun selectToday() {
+        selectedDay = 0
     }
 }
