@@ -1,15 +1,20 @@
 package com.example.shalatku
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class SalatKuViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(SalatKuUiState())
     val uiState: StateFlow<SalatKuUiState> = _uiState.asStateFlow()
+
+    private var callCounter = 0 // Variabel private untuk menghitung pemanggilan
 
     fun onEvent(event: SalatKuEvent) {
         when (event) {
@@ -20,6 +25,32 @@ class SalatKuViewModel : ViewModel() {
             SalatKuEvent.TasbihIncremented -> incrementTasbih()
             SalatKuEvent.TasbihReset -> resetTasbih()
             is SalatKuEvent.RoundSizeSelected -> setRoundSize(event.size)
+            SalatKuEvent.PrayerTimesRequested -> loadPrayerTimes() // <-- Tambahkan ini
+        }
+    }
+
+    private fun loadPrayerTimes() {
+        // Jika sedang loading,abaikan pemanggilan baru
+        if (_uiState.value.prayerTimes is PrayerTimesUiState.Loading) return
+
+        viewModelScope.launch {
+            // Set ke Loading
+            _uiState.update { it.copy(prayerTimes = PrayerTimesUiState.Loading) }
+
+            delay(1500) // Simulasi jeda network 1.5 detik
+
+            callCounter++
+
+            // Panggilan ganjil -> Success, panggilan genap -> Error
+            if (callCounter % 2 != 0) {
+                _uiState.update {
+                    it.copy(prayerTimes = PrayerTimesUiState.Success(samplePrayers))
+                }
+            } else {
+                _uiState.update {
+                    it.copy(prayerTimes = PrayerTimesUiState.Error("Failed to load prayer times."))
+                }
+            }
         }
     }
 

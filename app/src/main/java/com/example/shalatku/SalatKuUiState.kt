@@ -2,6 +2,7 @@ package com.example.shalatku
 
 data class SalatKuUiState(
     val prayers: List<Prayer> = samplePrayers,
+    val prayerTimes: PrayerTimesUiState = PrayerTimesUiState.Success(samplePrayers), // <-- Tambahkan ini
     val donePrayers: List<String> = emptyList(),
     val selectedDay: Int = 0,
     val tasbihCount: Int = 0,

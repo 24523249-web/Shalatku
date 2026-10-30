@@ -73,6 +73,8 @@ fun ShalatkuApp(viewModel: SalatKuViewModel = viewModel()) {
                 prayers = uiState.prayers,
                 selectedDay = uiState.selectedDay,
                 onSelectDay = { viewModel.onEvent(SalatKuEvent.DaySelected(it)) },
+                prayerTimes = uiState.prayerTimes, // <-- Tambahkan baris ini
+                onRefreshPrayerTimes = { viewModel.onEvent(SalatKuEvent.PrayerTimesRequested) }, // <-- Tambahkan baris ini
                 modifier = contentModifier
             )
             1 -> TrackerScreen(
