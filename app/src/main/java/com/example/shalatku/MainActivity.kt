@@ -16,7 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -38,10 +38,10 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ShalatkuApp(viewModel: SalatKuViewModel = viewModel()) {
-    // 1. Collect state dari ViewModel menggunakan collectAsStateWithLifecycle
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    var selected by rememberSaveable { mutableStateOf(0) }
+    // Menggunakan mutableIntStateOf untuk menghilangkan warning linting
+    var selected by rememberSaveable { mutableIntStateOf(0) }
 
     Scaffold(
         bottomBar = {
@@ -81,6 +81,7 @@ fun ShalatkuApp(viewModel: SalatKuViewModel = viewModel()) {
                 doneCount = uiState.doneCount,
                 onToggle = { viewModel.onEvent(SalatKuEvent.PrayerToggled(it)) },
                 onClear = { viewModel.onEvent(SalatKuEvent.PrayersCleared) },
+                onMarkAll = { viewModel.onEvent(SalatKuEvent.PrayersMarkedAll) },
                 modifier = contentModifier
             )
             2 -> TasbihScreen(

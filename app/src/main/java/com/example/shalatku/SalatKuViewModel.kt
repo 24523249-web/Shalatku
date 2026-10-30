@@ -11,11 +11,11 @@ class SalatKuViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SalatKuUiState())
     val uiState: StateFlow<SalatKuUiState> = _uiState.asStateFlow()
 
-    // Single Entry Point untuk semua event UI
     fun onEvent(event: SalatKuEvent) {
         when (event) {
             is SalatKuEvent.PrayerToggled -> togglePrayer(event.name)
             SalatKuEvent.PrayersCleared -> clearPrayers()
+            SalatKuEvent.PrayersMarkedAll -> markAllDone()
             is SalatKuEvent.DaySelected -> selectDay(event.index)
             SalatKuEvent.TasbihIncremented -> incrementTasbih()
             SalatKuEvent.TasbihReset -> resetTasbih()
@@ -23,7 +23,6 @@ class SalatKuViewModel : ViewModel() {
         }
     }
 
-    // Ubah 6 fungsi berikut menjadi private
     private fun togglePrayer(name: String) {
         _uiState.update { state ->
             val done = if (name in state.donePrayers) {
@@ -37,6 +36,12 @@ class SalatKuViewModel : ViewModel() {
 
     private fun clearPrayers() {
         _uiState.update { it.copy(donePrayers = emptyList()) }
+    }
+
+    private fun markAllDone() {
+        _uiState.update { state ->
+            state.copy(donePrayers = state.prayers.map { it.name })
+        }
     }
 
     private fun selectDay(index: Int) {

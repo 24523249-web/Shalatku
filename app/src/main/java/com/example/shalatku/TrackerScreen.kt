@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Checkbox
@@ -23,20 +24,26 @@ import androidx.compose.ui.unit.dp
 fun TrackerScreen(
     prayers: List<Prayer>,
     donePrayers: List<String>,
-    doneCount: Int, // <-- Added doneCount parameter
+    doneCount: Int,
     onToggle: (String) -> Unit,
     onClear: () -> Unit = {},
+    onMarkAll: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
         Text("Prayer Tracker", style = MaterialTheme.typography.headlineMedium)
-        // Updated to use doneCount and bodyLarge style as required
         Text("$doneCount of ${prayers.size} prayers done today", style = MaterialTheme.typography.bodyLarge)
 
         Spacer(Modifier.height(8.dp))
 
-        OutlinedButton(onClick = onClear) {
-            Text("Clear all")
+        Row {
+            OutlinedButton(onClick = onClear) {
+                Text("Clear all")
+            }
+            Spacer(Modifier.width(8.dp))
+            OutlinedButton(onClick = onMarkAll) {
+                Text("Mark all")
+            }
         }
 
         Spacer(Modifier.height(16.dp))
