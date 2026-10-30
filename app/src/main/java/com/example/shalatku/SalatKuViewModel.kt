@@ -11,7 +11,20 @@ class SalatKuViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SalatKuUiState())
     val uiState: StateFlow<SalatKuUiState> = _uiState.asStateFlow()
 
-    fun togglePrayer(name: String) {
+    // Single Entry Point untuk semua event UI
+    fun onEvent(event: SalatKuEvent) {
+        when (event) {
+            is SalatKuEvent.PrayerToggled -> togglePrayer(event.name)
+            SalatKuEvent.PrayersCleared -> clearPrayers()
+            is SalatKuEvent.DaySelected -> selectDay(event.index)
+            SalatKuEvent.TasbihIncremented -> incrementTasbih()
+            SalatKuEvent.TasbihReset -> resetTasbih()
+            is SalatKuEvent.RoundSizeSelected -> setRoundSize(event.size)
+        }
+    }
+
+    // Ubah 6 fungsi berikut menjadi private
+    private fun togglePrayer(name: String) {
         _uiState.update { state ->
             val done = if (name in state.donePrayers) {
                 state.donePrayers - name
@@ -22,15 +35,15 @@ class SalatKuViewModel : ViewModel() {
         }
     }
 
-    fun clearPrayers() {
+    private fun clearPrayers() {
         _uiState.update { it.copy(donePrayers = emptyList()) }
     }
 
-    fun selectDay(index: Int) {
+    private fun selectDay(index: Int) {
         _uiState.update { it.copy(selectedDay = index) }
     }
 
-    fun incrementTasbih() {
+    private fun incrementTasbih() {
         _uiState.update { state ->
             val next = state.tasbihCount + 1
             if (next == state.roundSize) {
@@ -41,12 +54,11 @@ class SalatKuViewModel : ViewModel() {
         }
     }
 
-    fun resetTasbih() {
+    private fun resetTasbih() {
         _uiState.update { it.copy(tasbihCount = 0, completedRounds = 0) }
     }
 
-    fun setRoundSize(size: Int) {
-        // HW12 rule: a new target resets the current count but keeps the completed rounds.
+    private fun setRoundSize(size: Int) {
         _uiState.update { it.copy(roundSize = size, tasbihCount = 0) }
     }
 }
